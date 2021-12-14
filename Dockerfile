@@ -8,6 +8,7 @@ ENV ADMINPASSWORD swadmin
 ENV USER steam
 ENV PLAYERPORTS 16262-16272
 ENV SERVERPORT 16261
+ENV STEAMCMD steamcmd
 
 RUN useradd -m ${USER}
 
@@ -27,13 +28,13 @@ RUN mkdir /home/steam/steamcmd &&\
 	cd /home/steam/steamcmd &&\
 	curl http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -vxz
 
+RUN /home/steam/steamcmd/steamcmd.sh +quit
+RUN /home/steam/steamcmd/steamcmd.sh +force_install_dir /home/pzserver +login anonymous +app_update 380870 -beta b41multiplayer +quit
+
 USER ${USER}
 
-RUN /home/steam/steamcmd/steamcmd.sh +quit
-RUN /home/steam/steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/pzserver +app_update 380870 -beta b41multiplayer +quit
-
-EXPOSE ${STEAMPORT1}/udp
-EXPOSE ${STEAMPORT2}/udp
+EXPOSE ${STEAMPORT1}
+EXPOSE ${STEAMPORT2}
 EXPOSE ${SERVERPORT}/udp
 EXPOSE ${PLAYERPORTS}
 
